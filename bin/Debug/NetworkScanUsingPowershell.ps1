@@ -1,7 +1,7 @@
-[string]$gateWay = (Get-wmiObject Win32_networkAdapterConfiguration | ? {$_.IPEnabled}).DefaultIPGateway
+[string]$gateWay = (Get-wmiObject Win32_networkAdapterConfiguration | ? {$_.IPEnabled}).DefaultIPGateway | Where-Object {$_ -match "^([0-9]{1,3})\.([0-9]{1,3})\.([0-9]{1,3})\.([0-9]{1,3})$"}
 $boastcard= ""
 for($i=0; $i -lt 4; $i++){
-  if(($gateWay.Split(".")[$i] -eq "0") -or ($gateWay.Split(".")[$i] -eq "1") ){
+  if($i -eq 3 ){
     $boastcard = $boastcard +"255"
   }else {
     $boastcard = $boastcard +$gateWay.Split(".")[$i]
@@ -141,6 +141,8 @@ $pingSweep = Invoke-TSPingSweep -StartAddress $gateWay -EndAddress $boastcard -R
 # }
 $pingSweep | Format-Table -AutoSize
 Read-Host "Press any key ....."
+
+
 
 
 
